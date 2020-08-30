@@ -54,19 +54,19 @@ As in the previous step the text is annotated, from the response given by Spotli
 
 The expectation of this step was to get a result as follow,
 
-_**1)** __**Which river does the Brooklyn Bridge cross? ==\&gt; Which river does the \&lt;**__ **entity\&gt;** _ _ **cross?** _
+**1)** Which river does the Brooklyn Bridge cross? ==> Which river does the <entity> cross?
 
-_ **¿Por qué río cruza la Brooklyn Bridge? ==\&gt; ¿Por qué río cruza la \&lt;** __**entidad\&gt;**__ **?** _
+¿Por qué río cruza la Brooklyn Bridge? ==> ¿Por qué río cruza la <entidad>?
 
-_**2)How many rivers and lakes are in South Carolina? ==\&gt; How many rivers and lakes are in \&lt;** __**entity\&gt;**__ **?** _
+**2)** How many rivers and lakes are in South Carolina? ==> How many rivers and lakes are in <entity>?
 
-_ **¿Cuántos ríos y lagos hay en Carolina del Sur? ==\&gt; ¿Cuántos ríos y lagos hay en \&lt;** __**entidad\&gt;**__ **?** _
+¿Cuántos ríos y lagos hay en Carolina del Sur? ==> ¿Cuántos ríos y lagos hay en <entidad>?
 
 For the 1) example shown above, the entity is &quot;Brooklyn Bridge&quot; which was annotated in the English text. The entity appears on the Spanish text as the same, therefore it can be replaced easily.
 
 But in the 2) example the entity is different in Spanish text. For identifying the correct translation of the entity and replacing it, I used DBpedia SPARQL queries.
 
-_query_ = _**select ?label where {\&lt;http://dbpedia.org/resource/South\_Carolina\&gt; rdfs:label ?label. filter(lang(?label) = &#39;es&#39;)}**_
+query = select ?label where {<http://dbpedia.org/resource/South_Carolina> rdfs:label ?label. filter(lang(?label) = 'es')}
 
 Which returns the Spanish translation of the entity &quot;Carolina del Sur&quot;. Using this result the entity is replaced in the Spanish text. This process is done for all the text pairs. Finally, the template dataset is created by replacing the entities.
 
@@ -78,12 +78,12 @@ We used the resource returned by DBpedia spotlight to annotate the target langua
 
 As the final step, the NMT model was trained on the correctly annotated training dataset and evaluated on the correctly annotated test dataset. The results were bad since the training dataset is small.
 
-#### **Conclusion**
+### **Conclusion**
 
 - The used dataset is small and using the entity annotation method we used the dataset became even smaller. Therefore the model was not able to recognize patterns.
 - Since the dataset is small, the vocabulary was small and when it comes to translation &#39;Key Errors&#39; were thrown.
 
-#### **Future work**
+### **Future work**
 
 - Try different datasets.
 - Try annotating the input language and target language texts separately using DBpedia spotlight.
