@@ -70,7 +70,7 @@ query = select ?label where {<http://dbpedia.org/resource/South_Carolina> rdfs:l
 
 Which returns the Spanish translation of the entity &quot;Carolina del Sur&quot;. Using this result the entity is replaced in the Spanish text. This process is done for all the text pairs. Finally, the template dataset is created by replacing the entities.
 
-#### **4.**  **Manually evaluate the entity recognition process.**
+### **4.**  **Manually evaluate the entity recognition process.**
 
 We used the resource returned by DBpedia spotlight to annotate the target language text. Since there were some resources not identified correctly, the annotation process was flawed. Therefore I had to manually check and identify the correctly annotated text.
 
