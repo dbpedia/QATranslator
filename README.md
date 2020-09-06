@@ -1,20 +1,25 @@
 # QTranslator
 
-This experimentation was done as follows,
+QTranslator is a question translator that uses a attention based Neural Machine Translation to leverage question translation in different languages.
+
+
+## Evaluation
+The evaluation was performed as follows:
 
 1. Dataset Creation using QALD datasets.
 2. Train and evaluate the initial dataset on Tensorflow Neural Machine translation with attention [model](https://www.blogger.com/u/1/blog/post/edit/7948183821104122808/789201015065518066#).
 3. Using [DBpedia Spotlight](https://www.blogger.com/u/1/blog/post/edit/7948183821104122808/789201015065518066#) to annotate the entities and create templates.
 4. Manually evaluate the entity recognition process.
-5. Train and evaluate the correctly annotated text on Tensorflow Neural Machine translation with attention [model](https://www.blogger.com/u/1/blog/post/edit/7948183821104122808/789201015065518066#).
+5. Trainning and evaluating the correctly annotated text on Tensorflow Neural Machine translation with attention [model](https://www.blogger.com/u/1/blog/post/edit/7948183821104122808/789201015065518066#).
 
 ### **1. Dataset Creation using QALD datasets.**
 
-From the QALD datasets from QALD-3 to QALD-7, I created a dataset which consists of language pairs such as English-Spanish, English-Deutsch, etc. These pairs are created for all languages Deutsch, Spanish, French Brazilian Portuguese, Portuguese, Italian, Dutch, Hindi, Romanian, Persian, and Russian.
+From the QALD datasets from QALD-3 to QALD-7, I created a dataset which consists of language pairs such as English-Spanish, English-Deutsch, etc. 
+These pairs are created for all languages Deutsch, Spanish, French Brazilian Portuguese, Portuguese, Italian, Dutch, Hindi, Romanian, Persian, and Russian.
 
 ### **2. Train and evaluate the initial dataset on Tensorflow Neural Machine translation with attention model.**
 
-Using the &quot;Tensorflow Neural Machine translation with attention model&quot;, trained the initial datasets created as said above and got the following results,
+Using the &quot;Tensorflow Neural Machine translation with attention model&quot;, trained the initial datasets created as said above and got the following results:
 
 | **language** | **accuracy %** | **train set size** | **test set size** | **error %** | **wrong translation %** |
 | --- | --- | --- | --- | --- | --- |
@@ -30,58 +35,72 @@ Using the &quot;Tensorflow Neural Machine translation with attention model&quot;
 | Persian | 8.14479 | 567 | 221 | 32 | 59 |
 | Romanian | 52.3026 | 534 | 159 | 21 | 25 |
 
-After analyzing the results, I observed that the model failed to identify some words because they are not in its vocabulary. Most of the words are different entities such as CPU, Brooklyn bridge, etc.
+After analyzing the results, I observed that the model failed to identify some words because they are not in its vocabulary. 
+Most of the words are different entities such as CPU, Brooklyn bridge, etc.
 
 ### **3. Using DBpedia Spotlight to annotate the entities and create templates.**
 
-For this experiment, I used the English-Spanish language pair dataset. Creating templates included these steps,
+For this experiment, I used the English-Spanish language pair dataset using the following procedure:
 
-1. Annotate Text
-2. Get Resource and Entity
-3. Replace the Entity
+1. Text Annotation using Entity Recognition;
+2. Retrieve the resource(s) associated with the annotation, and;
+3. Replace the Entity by a placeholder.
 
 For this task, we used [DBpedia Spotlight](https://www.blogger.com/u/1/blog/post/edit/7948183821104122808/789201015065518066#), which is a tool for annotating mentions of DBpedia resources in text, which helps to link information to the Linked Open Data cloud through DBpedia.
 
 1. **Annotate Text**
 
-Using the provided API from DBpedia Spotlight, the English sentences are annotated. By sending a request to &#39;/annotate&#39; endpoint the entities were annotated. Spotlight offers a parameter &quot;confidence&quot; to adjust the sensitivity of identifying an entity. I observed that using 0.2,0.3 confidence caused annotating non-entity words such as &quot;when&quot;, &quot;give&quot; etc. Therefore the confidence 0.5 is used for optimal performance. I observed that in that confidence level, the tool fails to identify some entities.
+Spotlight offers a parameter &quot;confidence&quot; to adjust the sensitivity of identifying an entity. 
+I observed that using 0.2,0.3 confidence caused annotating non-entity words such as &quot;when&quot;, &quot;give&quot. 
+Therefore, the confidence 0.5 was used for optimal performance. 
+I observed that in that confidence level, the tool fails to identify some entities.
 
-#### **2. Get Resouce and Entity**
+#### **2. Extracting the Entity**
 
-As in the previous step the text is annotated, from the response given by Spotlight, I extracted the DBpedia resource and the entity. For example, if the annotated entity was &quot;New York&quot; the resource would be &quot;http://dbpedia.org/resource/New\_York&quot;.
+From the response given by Spotlight, I extracted the DBpedia the entity. 
+For example, if the annotated entity was &quot;New York&quot; the resource would be &quot;http://dbpedia.org/resource/New\_York&quot;.
 
 #### **3. Replace the Entity**
 
-The expectation of this step was to get a result as follow,
+The expectation of this step was to get a result as follow:
 
-**1)** Which river does the Brooklyn Bridge cross? ==> Which river does the <entity> cross?
+**1)** Which river does the Brooklyn Bridge cross? ==> Which river does the <A> cross?
 
-¿Por qué río cruza la Brooklyn Bridge? ==> ¿Por qué río cruza la <entidad>?
+¿Por qué río cruza la Brooklyn Bridge? ==> ¿Por qué río cruza la <A>?
 
-**2)** How many rivers and lakes are in South Carolina? ==> How many rivers and lakes are in <entity>?
+**2)** How many rivers and lakes are in South Carolina? ==> How many rivers and lakes are in <A>?
 
-¿Cuántos ríos y lagos hay en Carolina del Sur? ==> ¿Cuántos ríos y lagos hay en <entidad>?
+¿Cuántos ríos y lagos hay en Carolina del Sur? ==> ¿Cuántos ríos y lagos hay en <A>?
 
-For the 1) example shown above, the entity is &quot;Brooklyn Bridge&quot; which was annotated in the English text. The entity appears on the Spanish text as the same, therefore it can be replaced easily.
+For the 1) example shown above, the entity is &quot;Brooklyn Bridge&quot; which was annotated in the English text. 
+The entity appears on the Spanish text as the same, therefore it can be replaced easily.
 
-But in the 2) example the entity is different in Spanish text. For identifying the correct translation of the entity and replacing it, I used DBpedia SPARQL queries.
+But in the 2) example the entity is different in Spanish text. 
+For identifying the correct translation of the entity and replacing it, I used DBpedia SPARQL queries.
 
 query = select ?label where {<http://dbpedia.org/resource/South_Carolina> rdfs:label ?label. filter(lang(?label) = 'es')}
 
-Which returns the Spanish translation of the entity &quot;Carolina del Sur&quot;. Using this result the entity is replaced in the Spanish text. This process is done for all the text pairs. Finally, the template dataset is created by replacing the entities.
+Which returns the Spanish translation of the entity &quot;Carolina del Sur&quot;. 
+Using this result the entity is replaced in the Spanish text. 
+This process is done for all the text pairs. 
+Finally, the template dataset is created by replacing the entities.
 
 ### **4.**  **Manually evaluate the entity recognition process.**
 
-We used the resource returned by DBpedia spotlight to annotate the target language text. Since there were some resources not identified correctly, the annotation process was flawed. Therefore I had to manually check and identify the correctly annotated text.
+We used the resource returned by DBpedia spotlight to annotate the target language text. 
+Since there were some resources not identified correctly, the annotation process was flawed. 
+Therefore, I had to manually check and identify the correctly annotated text.
 
 ### **5.**  **Train and evaluate the template dataset on Tensorflow Neural Machine translation with attention** [**model**](https://www.blogger.com/u/1/blog/post/edit/7948183821104122808/789201015065518066#) **.**
 
-As the final step, the NMT model was trained on the correctly annotated training dataset and evaluated on the correctly annotated test dataset. The results were bad since the training dataset is small.
+As the final step, the NMT model was trained on the correctly annotated training dataset and evaluated on the correctly annotated test dataset. 
+The results were not optimal since the training dataset was small.
 
 ### **Conclusion**
 
-- The used dataset is small and using the entity annotation method we used the dataset became even smaller. Therefore the model was not able to recognize patterns.
-- Since the dataset is small, the vocabulary was small and when it comes to translation &#39;Key Errors&#39; were thrown.
+- The used training corpus was relatively small for the task and, due to errors of the entity annotation method, the quality of the corpus was not optimal. 
+  Therefore, the model was not able to recognize patterns.
+- Since the dataset is small, the vocabulary was small and, when it comes to translation, &#39;Key Errors&#39; were thrown.
 
 ### **Future work**
 
