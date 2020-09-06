@@ -64,13 +64,13 @@ For example, if the annotated entity was &quot;New York&quot; the resource would
 
 The expectation of this step was to get a result as follow:
 
-**1)** Which river does the Brooklyn Bridge cross? ==> Which river does the <A> cross?
+**1)** Which river does the Brooklyn Bridge cross? ==> Which river does the \<A\> cross?
 
-¿Por qué río cruza la Brooklyn Bridge? ==> ¿Por qué río cruza la <A>?
+¿Por qué río cruza la Brooklyn Bridge? ==> ¿Por qué río cruza la \<A\>?
 
-**2)** How many rivers and lakes are in South Carolina? ==> How many rivers and lakes are in <A>?
+**2)** How many rivers and lakes are in South Carolina? ==> How many rivers and lakes are in \<A\>?
 
-¿Cuántos ríos y lagos hay en Carolina del Sur? ==> ¿Cuántos ríos y lagos hay en <A>?
+¿Cuántos ríos y lagos hay en Carolina del Sur? ==> ¿Cuántos ríos y lagos hay en \<A\>?
 
 For the 1) example shown above, the entity is &quot;Brooklyn Bridge&quot; which was annotated in the English text. 
 The entity appears on the Spanish text as the same, therefore it can be replaced easily.
