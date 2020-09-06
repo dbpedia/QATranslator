@@ -1,4 +1,4 @@
-# QATranslator
+# QTranslator
 
 This experimentation was done as follows,
 
