@@ -78,7 +78,9 @@ The entity appears on the Spanish text as the same, therefore it can be replaced
 But in the 2) example the entity is different in Spanish text. 
 For identifying the correct translation of the entity and replacing it, I used DBpedia SPARQL queries.
 
+```
 query = select ?label where {<http://dbpedia.org/resource/South_Carolina> rdfs:label ?label. filter(lang(?label) = 'es')}
+```
 
 Which returns the Spanish translation of the entity &quot;Carolina del Sur&quot;. 
 Using this result the entity is replaced in the Spanish text. 
